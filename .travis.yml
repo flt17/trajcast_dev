@@ -1,9 +1,9 @@
 language: python
 os: linux
-dist: xenial
+dist: focal
 
 python:
-  - "3.11"
+  - "3.12"
 
 branches:
   only:
