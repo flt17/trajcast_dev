@@ -1,0 +1,139 @@
+model:
+  OneHotAtomTypeEncoding:
+    OneHotAtomTypeEncoding:
+      number_of_species: 4
+      irreps_in: {}
+      output_field: atom_type_embedding
+  EdgeLengthEncoding:
+    EdgeLengthEncoding:
+      radial_basis: FixedBasis
+      cutoff_function: {}
+      basis_kwargs:
+        rmax: 4.0
+        rmin: 0
+        basis_function: gaussian
+        basis_size: 10
+        normalization: true
+      cutoff_kwargs: {}
+      irreps_in:
+        atom_type_embedding: 4x0e
+      output_field: edge_lengths_embedding
+  SH_EdgeVectors:
+    SphericalHarmonicProjection:
+      max_rotation_order: 2
+      project_on_unit_sphere: true
+      normalization_projection: component
+      irreps_in:
+        atom_type_embedding: 4x0e
+        edge_lengths_embedding: 10x0e
+      input_field: edge_vectors
+      output_field: sh_embedding_edge_vectors
+  LinearTypeEncoding:
+    LinearTensorMixer:
+      input_field: atom_type_embedding
+      output_field: node_features
+      irreps_in:
+        atom_type_embedding: 4x0e
+        edge_lengths_embedding: 10x0e
+        sh_embedding_edge_vectors: 1x0e+1x1o+1x2e
+      irreps_out: 8x0e+8x0o+8x1e+8x1o
+  MessagePassingLayer1:
+    MessagePassingLayer:
+      max_rotation_order: 2
+      input1_field: node_features
+      input2_field: sh_embedding_edge_vectors
+      weight_field: edge_lengths_embedding
+      conditioning_field: {}
+      output_field: node_features
+      irreps_in:
+        atom_type_embedding: 4x0e
+        edge_lengths_embedding: 10x0e
+        sh_embedding_edge_vectors: 1x0e+1x1o+1x2e
+        node_features: 8x0o+8x0e+8x1o+8x1e
+      resnet: true
+      fc_kwargs:
+        n_neurons:
+        - 64
+        - 64
+      tp_message_kwargs:
+        multiplicity_mode: uvu
+        trainable: true
+      tp_update_kwargs: {}
+  MessagePassingLayer2:
+    MessagePassingLayer:
+      max_rotation_order: 2
+      input1_field: node_features
+      input2_field: sh_embedding_edge_vectors
+      weight_field: edge_lengths_embedding
+      conditioning_field: {}
+      output_field: node_features
+      irreps_in:
+        atom_type_embedding: 4x0e
+        edge_lengths_embedding: 10x0e
+        sh_embedding_edge_vectors: 1x0e+1x1o+1x2e
+        node_features: 8x0o+8x0e+8x1o+8x1e
+      resnet: true
+      fc_kwargs:
+        n_neurons:
+        - 64
+        - 64
+      tp_message_kwargs:
+        multiplicity_mode: uvu
+        trainable: true
+      tp_update_kwargs: {}
+  LinearTarget:
+    LinearTensorMixer:
+      input_field: node_features
+      output_field: target
+      irreps_in:
+        atom_type_embedding: 4x0e
+        edge_lengths_embedding: 10x0e
+        sh_embedding_edge_vectors: 1x0e+1x1o+1x2e
+        node_features: 8x0o+8x0e+8x1o+8x1e
+      irreps_out: 1o
+data:
+  root: tests/unit/model/data/
+  name: Ac-Ala3-NHMe
+  cutoff_radius: 4.0
+  files: md22_Ac-Ala3-NHMe_disp_100frames.extxyz
+  atom_type_mapper:
+    1: 0
+    6: 1
+    7: 2
+    8: 3
+training:
+  target_field: target
+  reference_fields:
+  - displacements
+  batch_size: 5
+  num_epochs: 10
+  criterion:
+    loss_type:
+      main_loss: mse
+    learnable_weights: false
+    weights:
+    - 1
+    dimensions:
+    - 3
+  optimizer: Adam
+  optimizer_settings:
+    lr: 0.01
+    amsgrad: true
+  scheduler:
+  - LinearLR
+  - CosineAnnealingLR
+  scheduler_settings:
+    LinearLR:
+      start_factor: 0.1
+      end_factor: 1
+      total_iters: 1000
+    CosineAnnealingLR:
+      T_max: 1000
+      eta_min: 1.0e-06
+  chained_scheduler_hp:
+  - 5000
+  - 80000
+  tensorboard_settings:
+    loss: true
+  checkpoint_settings:
+    root: tests/unit/model/data/checkpoints

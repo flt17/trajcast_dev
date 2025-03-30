@@ -1,0 +1,58 @@
+{
+  "scanSettings": {
+    "configMode": "AUTO",
+    "configExternalURL": "",
+    "projectToken": "",
+    "baseBranches": [],
+    "licenseCheck": {
+      "rejectOnRestrictedLicense": true,
+      "allowedLicenses": [
+        "MIT",
+        "Apache-2.0",
+        "BSD-3-Clause"
+      ],
+      "restrictedLicenses": [
+        "GPL-3.0",
+        "AGPL-3.0",
+        "LGPL-3.0"
+      ]
+    }
+  },
+  "scanSettingsSAST": {
+    "enableScan": true,
+    "scanPullRequests": true,
+    "incrementalScan": true,
+    "baseBranches": [],
+    "snippetSize": 10
+  },
+  "checkRunSettings": {
+    "vulnerableCheckRunConclusionLevel": "neutral",
+    "displayMode": "diff",
+    "useMendCheckNames": true
+  },
+  "checkRunSettingsSAST": {
+    "checkRunConclusionLevel": "failure",
+    "severityThreshold": "high"
+  },
+  "issueSettings": {
+    "minSeverityLevel": "LOW",
+    "issueType": "DEPENDENCY"
+  },
+  "issueSettingsSAST": {
+    "minSeverityLevel": "high",
+    "issueType": "repo"
+  },
+  "remediateSettings": {
+    "workflowRules": {
+      "enabled": true
+    }
+  },
+  "imageSettings": {
+    "imageTracing": {
+      "enableImageTracingPR": false,
+      "addRepositoryCoordinate": false,
+      "addDockerfilePath": false,
+      "addMendIdentifier": false
+    }
+  }
+}

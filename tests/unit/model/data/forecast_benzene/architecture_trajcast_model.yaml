@@ -1,0 +1,37 @@
+num_chem_elements: 3
+edge_cutoff: 5.0
+num_edge_rbf: 8
+num_edge_poly_cutoff: 6
+num_vel_rbf: 8
+vel_max: 0.2
+max_rotation_order: 2
+num_hidden_channels: 64
+num_mp_layers: 5
+avg_num_neighbors: 10.0
+edge_mlp_kwargs:
+  n_neurons:
+  - 64
+  - 64
+  - 64
+  activation: silu
+vel_mlp_kwargs:
+  n_neurons:
+  - 64
+  - 64
+  - 64
+  activation: silu
+nl_gate_kwargs:
+  activation_scalars:
+    o: tanh
+    e: silu
+  activation_gates:
+    e: silu
+conserve_ang_mom: true
+net_lin_mom:
+- 0.0
+- 0.0
+- 0.0
+net_ang_mom:
+- 0.0
+- 0.0
+- 0.0

@@ -1,0 +1,234 @@
+
+OneHotAtomTypeEncoding:
+  OneHotAtomTypeEncoding:
+    number_of_species: 2
+    irreps_in: {}
+    output_field: atom_type_embedding
+Normalization:
+  NormalizationLayer:
+    input_fields:
+    - displacements
+    - update_velocities
+    output_fields:
+    - displacements
+    - update_velocities
+    means:
+      displacements: 0
+      update_velocities: 0
+    stds:
+      displacements: 0.0012
+      update_velocities: 0.0115
+    irreps_in:
+      atom_type_embedding: 2x0e
+EdgeLengthEncoding:
+  EdgeLengthEncoding:
+    radial_basis: FixedBasis
+    cutoff_function: {}
+    basis_kwargs:
+      rmax: 5
+      rmin: 0
+      basis_function: gaussian
+      basis_size: 10
+      normalization: true
+    cutoff_kwargs: {}
+    irreps_in:
+      atom_type_embedding: 2x0e
+    output_field: edge_lengths_embedding
+VelocityNormEncoding:
+  TensorNormEncoding:
+    input_field: velocities
+    basis: FixedBasis
+    cutoff_function: {}
+    basis_kwargs:
+      rmax: 0.05
+      rmin: 0
+      basis_function: gaussian
+      basis_size: 10
+      normalization: true
+    cutoff_kwargs: {}
+    irreps_in:
+      atom_type_embedding: 2x0e
+      edge_lengths_embedding: 10x0e
+SH_EdgeVectors:
+  SphericalHarmonicProjection:
+    max_rotation_order: 1
+    project_on_unit_sphere: true
+    normalization_projection: component
+    irreps_in:
+      atom_type_embedding: 2x0e
+      edge_lengths_embedding: 10x0e
+      norm_embedding_velocities: 10x0e
+    input_field: edge_vectors
+    output_field: sh_embedding_edge_vectors
+SH_Velocities:
+  SphericalHarmonicProjection:
+    max_rotation_order: 1
+    project_on_unit_sphere: true
+    normalization_projection: component
+    irreps_in:
+      atom_type_embedding: 2x0e
+      edge_lengths_embedding: 10x0e
+      norm_embedding_velocities: 10x0e
+      sh_embedding_edge_vectors: 1x0e+1x1o
+    input_field: velocities
+    output_field: sh_embedding_velocities
+LinearTypeEncoding:
+  LinearTensorMixer:
+    input_field: atom_type_embedding
+    output_field: node_features
+    irreps_in:
+      atom_type_embedding: 2x0e
+      edge_lengths_embedding: 10x0e
+      norm_embedding_velocities: 10x0e
+      sh_embedding_edge_vectors: 1x0e+1x1o
+      sh_embedding_velocities: 1x0e+1x1o
+    irreps_out: 16x0o+16x0e+16x1o+16x1e
+MessagePassingLayer1:
+  MessagePassingLayer:
+    max_rotation_order: 1
+    input1_field: node_features
+    input2_field: sh_embedding_edge_vectors
+    weight_field: edge_lengths_embedding
+    conditioning_field: sh_embedding_velocities
+    conditioning_weight_field: norm_embedding_velocities
+    output_field: node_features
+    irreps_in:
+      atom_type_embedding: 2x0e
+      edge_lengths_embedding: 10x0e
+      norm_embedding_velocities: 10x0e
+      sh_embedding_edge_vectors: 1x0e+1x1o
+      sh_embedding_velocities: 1x0e+1x1o
+      node_features: 16x0o+16x0e+16x1o+16x1e
+    non_linearity: true
+    resnet: true
+    resnet_self_interaction: true
+    fc_kwargs:
+      n_neurons:
+      - 64
+      - 64
+    fc_conditioning_kwargs:
+      n_neurons:
+      - 64
+      - 64
+      activation: silu
+    tp_message_kwargs:
+      multiplicity_mode: uvu
+      trainable: true
+    tp_update_kwargs:
+      multiplicity_mode: uvu
+      trainable: true
+    non_linearity_kwargs:
+      irreps_gates: 32x0e
+      activation_scalars:
+      - tanh
+      - silu
+      activation_gates:
+      - silu
+MessagePassingLayer2:
+  MessagePassingLayer:
+    max_rotation_order: 1
+    input1_field: node_features
+    input2_field: sh_embedding_edge_vectors
+    weight_field: edge_lengths_embedding
+    conditioning_field: sh_embedding_velocities
+    conditioning_weight_field: norm_embedding_velocities
+    output_field: node_features
+    irreps_in:
+      atom_type_embedding: 2x0e
+      edge_lengths_embedding: 10x0e
+      norm_embedding_velocities: 10x0e
+      sh_embedding_edge_vectors: 1x0e+1x1o
+      sh_embedding_velocities: 1x0e+1x1o
+      node_features: 16x0o+16x0e+16x1o+16x1e
+    non_linearity: true
+    resnet: true
+    resnet_self_interaction: true
+    fc_kwargs:
+      n_neurons:
+      - 64
+      - 64
+    fc_conditioning_kwargs:
+      n_neurons:
+      - 64
+      - 64
+      activation: silu
+    tp_message_kwargs:
+      multiplicity_mode: uvu
+      trainable: true
+    tp_update_kwargs:
+      multiplicity_mode: uvu
+      trainable: true
+    non_linearity_kwargs:
+      irreps_gates: 32x0e
+      activation_scalars:
+      - tanh
+      - silu
+      activation_gates:
+      - silu
+MessagePassingLayer3:
+  MessagePassingLayer:
+    max_rotation_order: 1
+    input1_field: node_features
+    input2_field: sh_embedding_edge_vectors
+    weight_field: edge_lengths_embedding
+    conditioning_field: sh_embedding_velocities
+    conditioning_weight_field: norm_embedding_velocities
+    output_field: node_features
+    irreps_in:
+      atom_type_embedding: 2x0e
+      edge_lengths_embedding: 10x0e
+      norm_embedding_velocities: 10x0e
+      sh_embedding_edge_vectors: 1x0e+1x1o
+      sh_embedding_velocities: 1x0e+1x1o
+      node_features: 16x0o+16x0e+16x1o+16x1e
+    non_linearity: true
+    resnet: true
+    resnet_self_interaction: true
+    fc_kwargs:
+      n_neurons:
+      - 64
+      - 64
+    fc_conditioning_kwargs:
+      n_neurons:
+      - 64
+      - 64
+      activation: silu
+    tp_message_kwargs:
+      multiplicity_mode: uvu
+      trainable: true
+    tp_update_kwargs:
+      multiplicity_mode: uvu
+      trainable: true
+    non_linearity_kwargs:
+      irreps_gates: 32x0e
+      activation_scalars:
+      - tanh
+      - silu
+      activation_gates:
+      - silu
+LinearTarget:
+  LinearTensorMixer:
+    input_field: node_features
+    output_field: target
+    irreps_in:
+      atom_type_embedding: 2x0e
+      edge_lengths_embedding: 10x0e
+      norm_embedding_velocities: 10x0e
+      sh_embedding_edge_vectors: 1x0e+1x1o
+      sh_embedding_velocities: 1x0e+1x1o
+      node_features: 16x0o+16x0e+16x1o+16x1e
+    irreps_out: 2x1o
+Conservation:
+  Conservation:
+    input_field: target
+    disp_norm_const: 0.0012
+    vel_norm_const:  0.0115
+    conserve_angular: true
+    irreps_in:
+      atom_type_embedding: 2x0e
+      edge_lengths_embedding: 10x0e
+      norm_encoding_velocities: 10x0e
+      sh_embedding_edge_vectors: 1x0e+1x1o
+      sh_embedding_velocities: 1x0e+1x1o
+      node_features: 16x0o+16x0e+16x1o+16x1e
+      target: 2x1o

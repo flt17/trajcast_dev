@@ -1,0 +1,48 @@
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = [
+    "torch >= 2.4",
+    "flit_core >=3.8.0,<4"
+]
+
+[project]
+name = "trajcast"
+authors = [
+    {name = "Fabian Thiemann", email = "fabian.thiemann@ibm.com"},
+    {name = "Thiago Reschutzegger"},
+    {name = "Max Esposito"},
+]
+classifiers = [
+]
+requires-python = ">=3.10"
+dynamic = ["version", "description"]
+dependencies = [
+    "torch >= 2.4",
+    "torch_geometric >= 2.6",
+    "torch-scatter >= 2.1.2",
+    "torch_cluster >= 1.6.3",
+    "e3nn >= 0.5.4",
+    "ase >= 3.24.0",
+    "typer >= 0.15",
+    "tensorboard >= 2.18",
+    "pyyaml >= 6.0.0",
+    "torch-nl >= 0.3",
+]
+
+[project.optional-dependencies]
+cueq = [
+    "cuequivariance-torch == 0.1.0",
+    "cuequivariance-ops-torch-cu12 == 0.1.0",
+]
+mdanalysis = [
+    "MDAnalysis >= 2.0.0",
+]
+dev = [
+    "ruff >= 0.9"
+]
+examples = [
+    "notebook >= 7.0.0",
+    "matplotlib >= 3.0.0",
+    "nglview >= 3.1.0",
+    "huggingface-hub >= 0.29.0",
+]

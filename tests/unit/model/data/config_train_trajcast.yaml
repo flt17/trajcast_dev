@@ -1,0 +1,84 @@
+model:
+  num_chem_elements: 2
+  edge_cutoff: 5.0
+  num_edge_rbf: 8
+  num_edge_poly_cutoff: 6
+  num_vel_rbf: 8
+  vel_max: 0.2
+  max_rotation_order: 2
+  num_hidden_channels: 64
+  num_mp_layers: 5
+  avg_num_neighbors: 10.0
+  edge_mlp_kwargs:
+    n_neurons:
+    - 64
+    - 64
+    - 64
+    activation: silu
+  vel_mlp_kwargs:
+    n_neurons:
+    - 64
+    - 64
+    - 64
+    activation: silu
+  nl_gate_kwargs:
+    activation_scalars:
+      o: tanh
+      e: silu
+    activation_gates:
+      e: silu
+  conserve_ang_mom: true
+  net_lin_mom:
+  - 0.0
+  - 0.0
+  - 0.0
+  net_ang_mom:
+  - 0.0
+  - 0.0
+  - 0.0
+data:
+  root: tests/unit/model/data/forecast_benzene/
+  name: benzene
+  cutoff_radius: 5.0
+  files: benzene_validation_traj.extxyz
+  atom_type_mapper:
+    1: 0
+    6: 1
+training:
+  model_type: TrajCast
+  target_field: target
+  reference_fields:
+  - displacements
+  - update_velocities
+  batch_size: 5
+  num_epochs: 10
+  criterion:
+    loss_type:
+      main_loss: mse
+    learnable_weights: false
+    weights:
+    - 1
+    - 1
+  optimizer: Adam
+  optimizer_settings:
+    lr: 0.01
+    amsgrad: true
+  scheduler:
+  - LinearLR
+  - CosineAnnealingLR
+  scheduler_settings:
+    LinearLR:
+      start_factor: 0.1
+      end_factor: 1
+      total_iters: 1000
+    CosineAnnealingLR:
+      T_max: 1000
+      eta_min: 1.0e-06
+  chained_scheduler_hp:
+  - 5000
+  - 80000
+  tensorboard_settings:
+    log_dir: tests/unit/model/data/tb_log
+    loss: true
+  checkpoint_settings:
+    root: tests/unit/model/data/checkpoints
