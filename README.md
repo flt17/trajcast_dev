@@ -16,7 +16,7 @@
 
 ## About TrajCast
 
-*TrajCast* is a framework using autoregressive equivariant message-passing networks to evolve atomistic systems and generate molecular dynamics (MD) trajectories without relying on forces and solving the equations motion. Provided with a starting configuration comprising information about atom types, atomic positions, and velocities, *TrajCast* predicts displacements and new velocities for later state at time interval $\Delta t$. By rolling-out the predictions of *TrajCast* autoregressivley, a MD trajectory of the system of interest of arbitrary length can be generated. Naturally, using larger time intervals than classical MD simulations, *TrajCast* can generate long trajectories with fewer steps. For more details, please refer to our [preprint](https://arxiv.org/).
+*TrajCast* is a framework using autoregressive equivariant message-passing networks to evolve atomistic systems and generate molecular dynamics (MD) trajectories without relying on forces and solving the equations motion. Provided with a starting configuration comprising information about atom types, atomic positions, and velocities, *TrajCast* predicts displacements and new velocities for later state at time interval $\Delta t$. By rolling-out the predictions of *TrajCast* autoregressivley, a MD trajectory of the system of interest of arbitrary length can be generated. Naturally, using larger time intervals than classical MD simulations, *TrajCast* can generate long trajectories with fewer steps. For more details, please refer to our [preprint]([https://arxiv.org/](https://www.arxiv.org/abs/2503.23794)).
 
 
 **Please note, this code is still under development.**
@@ -95,14 +95,13 @@ Please feel free to reach out to [fabian.thiemann@ibm.com](mailto:fabian.thieman
 If you use this work, consider citing our paper
 
 ```
-@misc{thiemann2025,
+@misc{thiemann2025Force-Free,
       title={Force-Free Molecular Dynamics Through Autoregressive Equivariant Networks}, 
-      author={...},
+      author={Fabian L. Thiemann and Thiago Reschützegger and Massimiliano Esposito and Tseden Taddese and Juan D. Olarte-Plata and Fausto Martelli},
       year={2025},
-      eprint={...},
+      eprint={2503.23794},
       archivePrefix={arXiv},
-      primaryClass={...},
-      url={https://arxiv.org/...}, 
+      primaryClass={physics.comp-ph},
+      url={https://arxiv.org/abs/2503.23794}, 
 }
-
 ```
