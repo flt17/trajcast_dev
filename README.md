@@ -27,14 +27,14 @@
     <img src="./images/arch.svg">
 </p>
 
-**(A)** Autoregressive workflow: An atomistic system at time t0 is passed through an equivariant MPNN (grey box) to predict the new positions and velocities at time t1. Atomic attributes (positions, velocities, chemical elements) are encoded into initial features, which are refined over T message passing blocks. Estimates of the displacement and velocity vectors are generated based on the final features. These are then refined to ensure momentum conservation. The trajectory is built by rolling out predictions, where outputs from one step serve as inputs for the next. A thermostat ensures sampling from the canonical (NVT) ensemble at constant temperature T , with states following the Boltzmann distribution. **(B)** The embedding block encodes node and edge attributes and generates the initial features. **(C)** Messages are constructed by convolving latent features with filters derived from a learnable radial basis and the spherical harmonics expansion of edge vectors. **(D)** In the update block, messages from neighbors are pooled and combined via a tensor product with velocity vectors in a learnable radial and spherical harmonic basis. The result is passed through a non-linearity and added to the previous layer’s features, weighted by the node’s chemical element. **(E)** Conservation of total linear and angular momentum is enforced by adjusting the displacements and velocities.
+**(A)** Autoregressive workflow: An atomistic system at time t0 is passed through an equivariant MPNN (grey box) to predict the new positions and velocities at time t1. Atomic attributes (positions, velocities, chemical elements) are encoded into initial features, which are refined over T message passing blocks. Estimates of the displacement and velocity vectors are generated based on the final features. These are then refined to ensure momentum conservation. The trajectory is built by rolling out predictions, where outputs from one step serve as inputs for the next. A thermostat ensures sampling from the canonical (NVT) ensemble at constant temperature T, with states following the Boltzmann distribution. **(B)** The embedding block encodes node and edge attributes and generates the initial features. **(C)** Messages are constructed by convolving latent features with filters derived from a learnable radial basis and the spherical harmonics expansion of edge vectors. **(D)** In the update block, messages from neighbors are pooled and combined via a tensor product with velocity vectors in a learnable radial and spherical harmonic basis. The result is passed through a non-linearity and added to the previous layer’s features, weighted by the node’s chemical element. **(E)** Conservation of total linear and angular momentum is enforced by adjusting the displacements and velocities.
 
 ## Getting started
 
 ### Installation
 
 ```sh
-git clone https://github.ibm.com/AD-TrajCast/trajcast.git
+git clone https://github.com/IBM/trajcast
 cd trajcast
 pip install torch==2.5.1
 pip install torch_scatter torch_cluster -f https://data.pyg.org/whl/torch-2.5.1+cpu.html
@@ -44,7 +44,7 @@ pip install .
 In case you have CUDA, you can install `cuEquivariance` to get faster results.
 
 ```sh
-git clone https://github.ibm.com/AD-TrajCast/trajcast.git
+git clone https://github.com/IBM/trajcast
 cd trajcast
 pip install torch==2.5.1
 pip install torch_scatter torch_cluster -f https://data.pyg.org/whl/torch-2.5.1+cu121.html
